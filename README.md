@@ -2,6 +2,9 @@
 black jack ai work
 
 
+The matrix.py is runnable and can play the game for now.
+
+
 cards:
 
   In the cards_class:
