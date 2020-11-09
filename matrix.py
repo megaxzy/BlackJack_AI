@@ -207,9 +207,13 @@ class game_class:
             return 1
 
     def input_action(self):
-
+        is_first=0
         while(1):
-            value=input("Please input actions (0 is stay; 1 is hit):")
+            if(is_first==0):
+                value=input("Please input actions (0 is stay; 1 is hit; 3 is drop the fist card; 4 is drop the second card):")
+
+            else:
+                value = input("Please input actions (0 is stay; 1 is hit; can not drop):")
             if (value=='0'):
                 win=self.judge_winner()
 
@@ -227,7 +231,18 @@ class game_class:
                 if(self.player_sum>21):
                     print("dealer win!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     break
+            if(is_first==0):
+                is_first = 1
+                if (value == '3'):
+                    self.player_sum = self.player_sum - self.list_player_cards[0][1]
+                    self.list_player_cards=self.list_player_cards[1:2]
 
+                    self.show_game_condition_for_play()
+                if (value == '4'):
+                    self.player_sum = self.player_sum - self.list_player_cards[1][1]
+                    self.list_player_cards=self.list_player_cards[0:1]
+
+                    self.show_game_condition_for_play()
 
     #TODO  algorithm
     def get_best_action(self):
