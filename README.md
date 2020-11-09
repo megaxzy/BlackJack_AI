@@ -11,7 +11,7 @@ Play round:
     
     (3)input_action() is to input the actions 0 is stay; 1 is hit; 2 is drop; 
     
-Algo:  //TODO
+Algo  //TODO:  
 
   (1)get_best_action()  is to tell you the most winnable actions
   
