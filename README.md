@@ -1,12 +1,16 @@
 # BlackJack_AI
 black jack ai work
 
+Operating environment：python3
 
-The matrix.py has include the calss and main function which is runnable and can play the game.
+files:
+  .py:
+    
+    The matrix.py has include the calss and main function which is runnable and can play the game.
 
-The algo.py is about the minimax algo(//TODO)
+    The algo.py is about the minimax algo(//TODO) 
 
-The test_for_algo.py is about the algorithm models tests.
+    The test_for_algo.py is about the algorithm models tests.
 
 cards:
 
