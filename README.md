@@ -86,6 +86,8 @@ Play round:
     
     (11)show_all_matrix_in_hands() is to show the values in player or dealer's hands, use for test.
     
+    (12)ai_input_action()  is to auto handle the ai actions.
+    
 Algo  
   In the algo_class:
   
