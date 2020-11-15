@@ -1,6 +1,10 @@
 import numpy as np
 import random
 import matrix_modified
+
+import numpy as np
+import random
+import matrix_modified
 import time
 
 
@@ -62,7 +66,7 @@ class algo_class:
                     temp_cards_matrix[i][j][0] = 1
         return list_score_times
 
-    def AI_chose_node(self):
+    def AI_init_node(self):
         node = node_class(self.game.cards.matrix.copy())
         node.temp_player_sum = self.game.player_sum
         node.temp_dealer_sum = self.game.dealer_sum_show
@@ -165,7 +169,8 @@ def __main__():
     game.start_one_round()
     game.show_game_condition_for_test()
 
-    algorithm = algo_class(game)
+
+    algo = algo_class(game)
 
     '''
     while(1):
@@ -178,3 +183,101 @@ def __main__():
     '''
 if __name__ == "__main__":
     __main__()
+
+
+'''
+class algo_class:
+    actions = ["stay","hit" , "drop"]
+    def __init__(self,game):
+        self.game=game
+
+    def turn_to_value(self,value):
+        card=value%13+1
+        if card>10:
+            card=10
+        return int(card)
+
+
+    def get_actions(self):
+
+        total_actions=[]
+        print("AI START!!!!!")
+        for hit_times in range(0,4):  #TODO
+            #print(hit_times)
+            list_score_times = self.minmax(hit_times,self.game.dealer_sum_all,self.game.player_sum,0,0,0)
+            cur_actions=[]
+            for i in range(0,hit_times):
+                cur_actions.append("hit")
+            cur_actions.append("stay")
+            total_actions.append(cur_actions)
+            total_actions.append(list_score_times)
+            #if(sum(list_score_times))
+            total_actions.append(list_score_times[0]/sum(list_score_times))
+            print("*****************************************************")
+            print(cur_actions)
+            print(list_score_times)
+            print(list_score_times[0]/sum(list_score_times))
+            print("*****************************************************")
+        #for item in total_actions: print(item)
+
+
+
+
+    def minmax(self,hit_times,dealer_sum,player_sum,win_times,lose_times,tie_times):
+
+
+        if hit_times == 0:  #stay
+            list_score_times = [win_times, lose_times, tie_times]   #win lose tie
+            list_score_times = self.dealer_turn(dealer_sum, player_sum, self.game.cards.matrix, list_score_times)
+            return  list_score_times
+        for i in range(0,self.game.size):
+            for j in range(0,52):
+                if self.game.cards.matrix[i][j][0]==1:
+                    self.game.cards.matrix[i][j][0] = 0
+                    win_times, lose_times, tie_times=self.minmax(hit_times-1,dealer_sum,player_sum+self.turn_to_value(j),win_times,lose_times,tie_times)
+                    self.game.cards.matrix[i][j][0] = 1
+        list_score_times = [win_times, lose_times, tie_times]
+        return list_score_times
+
+    def dealer_turn(self,dealer_sum, player_sum, temp_cards_matrix, list_score_times):
+        if dealer_sum >= 22:
+            list_score_times[0] = list_score_times[0] + 1  # win
+            return list_score_times
+        if dealer_sum >= 16:
+            if dealer_sum == player_sum:
+                list_score_times[2] = list_score_times[2] + 1  # tie
+            if dealer_sum > player_sum:
+                list_score_times[1] = list_score_times[1] + 1  # lose
+            if dealer_sum < player_sum:
+                list_score_times[0] = list_score_times[0] + 1  # win
+            return list_score_times
+        temp_temp_cards_matrix = temp_cards_matrix.copy()  # try each for the game
+        for i in range(0, self.game.size):
+            for j in range(0, 51):
+                if temp_cards_matrix[i][j][0] == 1:
+                    temp_cards_matrix[i][j][0] = 0
+                    list_score_times = self.dealer_turn(dealer_sum + self.turn_to_value(j), player_sum, temp_cards_matrix,list_score_times)
+                    temp_cards_matrix = temp_temp_cards_matrix
+        return list_score_times
+
+
+def __main__():
+    game = matrix_modified.game_class(1)  #size of the cards
+    game.start_one_round()
+    game.show_game_condition_for_test()
+
+
+    algo = algo_class(game)
+    algo.get_actions()
+
+    while(1):
+        game.start_one_round()
+        game.show_game_condition_for_play()
+        game.input_action()
+        game.end_one_round()
+        val=input("Do you want to start one new around(0 is yes; 1 is no)")
+        if(val=="1"):break
+
+if __name__ == "__main__":
+    __main__()
+'''
