@@ -49,6 +49,8 @@ files:
     
     (4) efficency test
     
+    algo_no_print.py is one format of algo.py.
+    
     algorithm_efficency.py is to test for the algorithm efficency.
     
 
