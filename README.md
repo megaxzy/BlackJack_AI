@@ -29,9 +29,7 @@ files:
     
     The game_player.py is to play by the user.
     
-    The game_ai.py is to play by the AI use the tree-base algorithm.
-    
-    The game_ai_random.py is to play by the random format.
+    The game_ai.py is to play by the AI use the tree-base algorithm and random algorithm.
     
     (2) class files
     
@@ -48,6 +46,10 @@ files:
     The test_for_tree.py is test about the tree algorithm.
     
     The test_for_tree_2.py is test about the tree algorithm.
+    
+    (4) efficency test
+    
+    algorithm_efficency.py is to test for the algorithm efficency.
     
 
 cards:
