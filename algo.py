@@ -26,6 +26,7 @@ class node_class:
 
 class algo_class:
     actions = ["stay","hit" , "drop"]
+    nodes_number=0
     def __init__(self,game):
         self.game=game
 
@@ -62,26 +63,31 @@ class algo_class:
                     temp_cards_matrix[i][j][0] = 1
         return list_score_times
 
-    def AI_chose_node(self):
+    def AI_chose_node(self,can_drop):
         node = node_class(self.game.cards.matrix.copy())
         node.temp_player_sum = self.game.player_sum
         node.temp_dealer_sum = self.game.dealer_sum_show
         node.temp_player_list = self.game.list_player_cards
         node.list_scores=[0,0,0]
-        node.can_drop=0
+        node.can_drop=can_drop
         node.show_all_values()
 
         print("******************************************************************************************")
-        print("AI START !!!!!!")
+        print("AI START ONE ROUND!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        self.nodes_number=0
         time.sleep(1)
-
-
-        list_scores,action=self.max_expected_tree(node,1)
-        print(str(list_scores))
-        print(action)
+        list_scores,action,index=self.max_expected_tree(node,1)
+        print()
+        print("AI results:")
+        print("Probable for win,lose,tie: "+ str(list_scores))
+        print("Best action: "+action)
+        print("Which card should be dropped(if the action is drop):"+ str(index))
+        print("Total nodes number:",self.nodes_number)
+        print("******************************************************************************************")
+        return action,index,self.nodes_number
 
     def max_expected_tree(self,node,deep):
-
+        self.nodes_number=self.nodes_number+1
         # stay
         node_temp = node
         #print("stay action "+str(deep))
@@ -90,17 +96,16 @@ class algo_class:
         #print(list_stay_score_times)
 
         if deep==3:       # TODO
-            return list_stay_score_times, "stay"
-
+            return list_stay_score_times, "stay", 0
 
         #time.sleep(1)
         # hit
         #print("hit action "+str(deep))
         list_hit_score_times = [0,0,0]
         node_temp = node
-
+        drop_index = 0
         for i in range(0,self.game.size):
-            for j in range(0,52):
+            for j in range(0,51):
                 add_values_hit = [0,0,0]
                 if node_temp.temp_matrix[i][j][0]==1:
                     node_temp.temp_matrix[i][j][0] = 0
@@ -108,7 +113,7 @@ class algo_class:
                     if node_temp.temp_player_sum > 21:
                         add_values_hit=[0,100,0]
                     else:
-                        add_values_hit,chose_action = self.max_expected_tree(node_temp,deep+1)
+                        add_values_hit,chose_action,drop_index = self.max_expected_tree(node_temp,deep+1)
                     node_temp.temp_player_sum = node_temp.temp_player_sum - self.turn_to_value(j)
                     node_temp.temp_matrix[i][j][0] = 1
                 if node_temp.temp_matrix[i][j][3]==1:
@@ -117,7 +122,7 @@ class algo_class:
                     if node_temp.temp_player_sum > 21:
                         add_values_hit=[0,100,0]
                     else:
-                        add_values_hit,chose_action = self.max_expected_tree(node_temp,deep+1)
+                        add_values_hit,chose_action,drop_index = self.max_expected_tree(node_temp,deep+1)
                     node_temp.temp_player_sum = node_temp.temp_player_sum - self.turn_to_value(j)
                     node_temp.temp_matrix[i][j][3]= 1
 
@@ -132,19 +137,22 @@ class algo_class:
         # drop
         #print("drop "+str(deep))
         list_drop_score_times = [0,0,0]
+        list_drop_score_times_max = [0, 0, 0]
         node_temp = node
+        drop_index = 0
         if node_temp.can_drop==0:
             node_temp.can_drop=1
             for i in range(0,len(node_temp.temp_player_list)):
                 node_temp.temp_player_sum = node_temp.temp_player_sum - self.turn_to_value(int(node_temp.temp_player_list[i][1]))
-                list_drop_score_times,chose_action=self.max_expected_tree(node_temp,deep+1)
+                list_drop_score_times,chose_action,drop_index=self.max_expected_tree(node_temp,deep+1)
                 node_temp.temp_player_sum = node_temp.temp_player_sum + self.turn_to_value(int(node_temp.temp_player_list[i][1]))
-        #print(list_drop_score_times)
+                if list_drop_score_times[0] >list_drop_score_times_max[0]:
+                    list_drop_score_times_max=list_hit_score_times
+                    drop_index=i
 
-        return self.max_return(list_stay_score_times,list_hit_score_times,list_drop_score_times)
+        return self.max_return(list_stay_score_times,list_hit_score_times,list_drop_score_times_max,drop_index)
 
-
-    def max_return(self,list_stay_score_times,list_hit_score_times,list_drop_score_times):
+    def max_return(self,list_stay_score_times,list_hit_score_times,list_drop_score_times,drop_index):
         win_pro_stay = list_stay_score_times[0]/sum(list_stay_score_times)
         win_pro_hit = list_hit_score_times[0] / sum(list_hit_score_times)
         if(sum(list_drop_score_times) == 0):
@@ -152,11 +160,11 @@ class algo_class:
         else:
             win_pro_drop = list_drop_score_times[0] / sum(list_drop_score_times)
         if win_pro_stay>=win_pro_drop and win_pro_stay>=win_pro_hit:
-            return list_stay_score_times,"stay"
+            return list_stay_score_times,"stay", int(drop_index)
         if win_pro_hit>=win_pro_drop and  win_pro_hit>=win_pro_stay:
-            return list_hit_score_times,"hit"
+            return list_hit_score_times,"hit",int(drop_index)
         if win_pro_drop>=win_pro_hit and win_pro_drop>=win_pro_stay:
-            return list_drop_score_times,"drop"
+            return list_drop_score_times,"drop",int(drop_index)
 
 
 
