@@ -3,6 +3,25 @@ black jack ai work
 
 Operating environment：python3
 
+Rules:
+    
+    (1) stay action: player end this round.
+    
+    (2) hit action: player get one more card.
+    
+    (3) drop action: player chose one card and drop this.
+    
+    (4) player can only drop once.
+    
+    (5) if player's cards' sum more than 21, then player lose.
+    
+    (6) if player chose stay action, then turn to the dealer's round.
+    
+    (7) if dealer's cards' sum more than 21 then player win.
+    
+    (8) else judge which one's cards' sum is higher, judge winner, or tie.
+    
+    
 files:
   .py:
   
@@ -70,6 +89,12 @@ Play round:
 Algo  
   In the algo_class:
   
-    (1)get_best_action()  is to tell you the most winnable actions.
+    (0)__init__(game)  you need to input the game_class object when you init the algo class.
   
-    (2)minmax()   is to build the tree to calculate each action final results(win,lost,tie), and help to get best action.
+    (1)dealer_turn()  is to calculate the dealer turn autoly.
+  
+    (2)AI_chose_node()   is to calculate the best action in this round (stay,hit,drop).
+    
+    (3)max_expected_tree()  is the expected tree function.
+    
+    (4)max_return()  is to calculate which one is the best for this action.
