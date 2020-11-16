@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import matrix_modified
+import matrix_no_print as matrix_modified
 import time
 
 
@@ -70,20 +70,12 @@ class algo_class:
         node.temp_player_list = self.game.list_player_cards
         node.list_scores=[0,0,0]
         node.can_drop=can_drop
-        node.show_all_values()
+        #node.show_all_values()
 
-        print("******************************************************************************************")
-        print("AI START ONE ROUND!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         self.nodes_number=0
         time.sleep(1)
         list_scores,action,index=self.max_expected_tree(node,1)
-        print()
-        print("AI results:")
-        print("Probable for win,lose,tie: "+ str(list_scores))
-        print("Best action: "+action)
-        print("Which card should be dropped(if the action is drop):"+ str(index))
-        print("Total nodes number:",self.nodes_number)
-        print("******************************************************************************************")
+
         return action,index,self.nodes_number
 
     def max_expected_tree(self,node,deep):
@@ -95,7 +87,7 @@ class algo_class:
                                                             node_temp.temp_matrix, [0,0,0],1)
         #print(list_stay_score_times)
 
-        if deep==3:       # TODO
+        if deep== 3 :       # TODO
             return list_stay_score_times, "stay", 0
 
         #time.sleep(1)
@@ -103,7 +95,6 @@ class algo_class:
         #print("hit action "+str(deep))
         list_hit_score_times = [0,0,0]
         node_temp = node
-
         drop_index = 0
         for i in range(0,self.game.size):
             for j in range(0,51):
@@ -131,7 +122,9 @@ class algo_class:
                     list_hit_score_times[k] = list_hit_score_times[k] + add_values_hit[k]
         sum_score=sum(list_hit_score_times)
         for k in range(0,3):
-            list_hit_score_times[k] = 100*list_hit_score_times[k]/sum_score
+            if sum_score!=0:
+                list_hit_score_times[k] = 100*list_hit_score_times[k]/sum_score
+
         #print(list_hit_score_times)
 
         #time.sleep(1)
@@ -141,36 +134,38 @@ class algo_class:
         list_drop_score_times_max = [0, 0, 0]
         node_temp = node
         drop_index = 0
-
-        if node_temp.can_drop==0:
-            node_temp.can_drop=1
-            for i in range(0,len(node_temp.temp_player_list)):
-
+        if node_temp.can_drop == 0:
+            node_temp.can_drop = 1
+            for i in range(0, len(node_temp.temp_player_list)):
                 node_temp.temp_player_sum = node_temp.temp_player_sum - int(node_temp.temp_player_list[i][1])
-
-                list_drop_score_times,chose_action,drop_index=self.max_expected_tree(node_temp,deep+1)
+                list_drop_score_times, chose_action, drop_index = self.max_expected_tree(node_temp, deep + 1)
                 node_temp.temp_player_sum = node_temp.temp_player_sum + int(node_temp.temp_player_list[i][1])
-                if list_drop_score_times[0] >list_drop_score_times_max[0]:
-                    list_drop_score_times_max=list_hit_score_times
-                    drop_index=i
+                if list_drop_score_times[0] > list_drop_score_times_max[0]:
+                    list_drop_score_times_max = list_hit_score_times
+                    drop_index = i
                 node_temp.can_drop = 0
-        print(list_drop_score_times_max)
-        print()
         return self.max_return(list_stay_score_times,list_hit_score_times,list_drop_score_times_max,drop_index)
 
     def max_return(self,list_stay_score_times,list_hit_score_times,list_drop_score_times,drop_index):
-        win_pro_stay = list_stay_score_times[0]/sum(list_stay_score_times)
-        win_pro_hit = list_hit_score_times[0] / sum(list_hit_score_times)
+        if(sum(list_stay_score_times) == 0):
+            win_pro_stay=0
+        else:
+            win_pro_stay = list_stay_score_times[0] / sum(list_stay_score_times)
+        if(sum(list_hit_score_times) == 0):
+            win_pro_hit=0
+        else:
+            win_pro_hit = list_hit_score_times[0] / sum(list_hit_score_times)
         if(sum(list_drop_score_times) == 0):
             win_pro_drop=0
         else:
             win_pro_drop = list_drop_score_times[0] / sum(list_drop_score_times)
+        if win_pro_drop>=win_pro_hit and win_pro_drop>=win_pro_stay:
+            return list_drop_score_times,"drop",int(drop_index)
         if win_pro_stay>=win_pro_drop and win_pro_stay>=win_pro_hit:
             return list_stay_score_times,"stay", int(drop_index)
         if win_pro_hit>=win_pro_drop and  win_pro_hit>=win_pro_stay:
             return list_hit_score_times,"hit",int(drop_index)
-        if win_pro_drop>=win_pro_hit and win_pro_drop>=win_pro_stay:
-            return list_drop_score_times,"drop",int(drop_index)
+
 
 
 

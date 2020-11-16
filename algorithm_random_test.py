@@ -20,14 +20,27 @@ class efficiency_class():
             can_drop = 0
             win = 0
             while(1):
-                algorithm = algo_file.algo_class(self.game)
-                action, drop_action, nodes_number = algorithm.AI_chose_node(can_drop)
-                end,win = self.game.ai_input_action(action, drop_action)
-                if action == "drop":
+                ran_01 = random.randint(0, 2)
+                end = 0
+                if ran_01==0:
+                    print("Chose stay!!!")
+                    end, win = self.game.ai_input_action("stay",0)
+                    break
+                if ran_01==1:
+                    print("Chose hit!!!")
+                    end,win = self.game.ai_input_action("hit", 0)
+                if ran_01 == 2 and can_drop == 1:
+                    continue
+                if ran_01==2 and can_drop==0:
+                    print("Chose drop!!!")
                     can_drop = 1
+                    ran_02 = random.randint(0, len(self.game.list_player_cards)-1)
+                    end,win = self.game.ai_input_action("drop", ran_02)
+
                 if end == 1:
                     break
             self.game.end_one_round()
+            print(win)
             # win
             if win==1:
                 list_score[0] = list_score[0]+1
@@ -37,7 +50,7 @@ class efficiency_class():
             # tie
             if win==0:
                 list_score[2] = list_score[2]+1
-            total_nodes = total_nodes + nodes_number
+            total_nodes = total_nodes
         time_end = time.time()
         time_use = time_end-time_start
         print(list_score)
@@ -51,7 +64,7 @@ def __main__():
     all_total_nodes = 0
     all_time_use = 0
     for i in range(0,10):  # 5 * 100
-        size=5
+        size=2
         print(size)
         game = matrix_no_print.game_class(size)  # size of the cards
         efficiency = efficiency_class(game)
