@@ -151,14 +151,17 @@ class algo_class:
                 list_drop_score_times,chose_action,drop_index=self.max_expected_tree(node_temp,deep+1)
                 node_temp.temp_player_sum = node_temp.temp_player_sum + int(node_temp.temp_player_list[i][1])
                 if list_drop_score_times[0] >list_drop_score_times_max[0]:
-                    list_drop_score_times_max=list_hit_score_times
+                    list_drop_score_times_max=list_drop_score_times
                     drop_index=i
                 node_temp.can_drop = 0
-        print(list_drop_score_times_max)
+
         print()
         return self.max_return(list_stay_score_times,list_hit_score_times,list_drop_score_times_max,drop_index)
 
     def max_return(self,list_stay_score_times,list_hit_score_times,list_drop_score_times,drop_index):
+        print("list_stay_score_times:", list_stay_score_times)
+        print("list_hit_score_times:", list_hit_score_times)
+        print("list_drop_score_times:", list_drop_score_times)
         win_pro_stay = list_stay_score_times[0]/sum(list_stay_score_times)
         win_pro_hit = list_hit_score_times[0] / sum(list_hit_score_times)
         if(sum(list_drop_score_times) == 0):
