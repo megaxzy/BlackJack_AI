@@ -141,7 +141,7 @@ class algo_class:
                 list_drop_score_times, chose_action, drop_index = self.max_expected_tree(node_temp, deep + 1)
                 node_temp.temp_player_sum = node_temp.temp_player_sum + int(node_temp.temp_player_list[i][1])
                 if list_drop_score_times[0] > list_drop_score_times_max[0]:
-                    list_drop_score_times_max = list_hit_score_times
+                    list_drop_score_times_max = list_drop_score_times
                     drop_index = i
                 node_temp.can_drop = 0
         return self.max_return(list_stay_score_times,list_hit_score_times,list_drop_score_times_max,drop_index)
