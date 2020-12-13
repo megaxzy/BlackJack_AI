@@ -60,7 +60,7 @@ class game_class:
         self.player_sum=0
         self.dealer_sum_show=0
         self.dealer_sum_all = 0
-        print("Game create ok")
+        #print("Game create ok")
 
     def start_one_round(self):
         while(1):
@@ -105,7 +105,7 @@ class game_class:
                 else:
                     self.dealer_sum_all = self.dealer_sum_all + ran_02 % 13 + 1
                 break
-        print("Start one new round")
+        #print("Start one new round")
 
     def show_game_condition_for_test(self):
         print ("******************************************************************************************************")
@@ -156,8 +156,8 @@ class game_class:
         print ("******************************************************************************************************")
 
     def end_one_round(self):
-        for i in range(0,self.size-1):
-            for j in range(0,51):
+        for i in range(0,self.size):
+            for j in range(0,52):
                 if self.cards.matrix[i][j][1]==1 or self.cards.matrix[i][j][2]==1 or self.cards.matrix[i][j][3]==1:
                     self.cards.matrix[i][j][1]=0
                     self.cards.matrix[i][j][2]=0
@@ -222,7 +222,7 @@ class game_class:
     def show_all_matrix_in_hands(self):
         print("show_all_matrix_in_hands:")
         for i in range(0,self.size):
-            for j in range(0,51):
+            for j in range(0,52):
 
                 if self.cards.matrix[i][j][1]==1:
                     print("In player hands :", i, j)
@@ -288,9 +288,6 @@ class game_class:
             ind_drop = int(drop_index)
             self.recalculate_player_list_and_sum(ind_drop)
             self.show_game_condition_for_play()
-        print()
-        print()
-        print()
         return end,win
 
 def __main__():

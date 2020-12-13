@@ -14,7 +14,7 @@ class efficiency_class():
         total_nodes=0
         time_start = time.time()
 
-        for i in range(0,10):
+        for i in range(0,5):
             print("i:"+str(i))
             self.game.start_one_round()
             can_drop = 0
@@ -50,8 +50,8 @@ def __main__():
     all_list_score = [0, 0, 0]
     all_total_nodes = 0
     all_time_use = 0
-    for i in range(0,10):  # 5 * 100
-        size=5
+    for i in range(0,20):  # 5 * 100
+        size=1
         print(size)
         game = matrix_no_print.game_class(size)  # size of the cards
         efficiency = efficiency_class(game)

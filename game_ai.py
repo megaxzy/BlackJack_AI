@@ -32,7 +32,8 @@ def AI_play():
             while(1):
                 algorithm = algo.algo_class(game)
                 action,drop_action,nodes_number=algorithm.AI_chose_node(can_drop)
-                print()
+                print("action:",action)
+                print("drop_action:", drop_action)
                 end,win = game.ai_input_action(action,drop_action)
                 if action=="drop":
                     can_drop=1
