@@ -1,3 +1,95 @@
+import numpy as np
+import torch as tr
+from torch.nn import Sequential, Conv2d, Linear, Flatten, LeakyReLU, Tanh
+import torch.nn.functional
+import matrix_modified
+import algo_for_nn as algo
+import torch
+import torch.nn as nn
+import numpy as np
+import time
+import os
+
+path = ['imple_4_size_1.pkl','imple_4_size_2.pkl','imple_4_size_3.pkl','imple_4_size_4.pkl','imple_4_size_5.pkl']
+#path_test = ['imple_4_size_1.pkl','imple_4_size_2.pkl','imple_4_size_3.pkl','imple_4_size_4.pkl','imple_4_size_5.pkl']
+def judge_chose(result,can_drop):
+    actions=["stay","hit","drop"]
+    chose_action = ""
+    if can_drop==0:
+        if (result[0] >= result[1] and result[0] >= result[2]): chose_action = actions[0]
+        elif (result[1] >= result[0] and result[1] >= result[2]): chose_action = actions[1]
+        elif (result[2] >= result[0] and result[2] >= result[1]): chose_action = actions[2]
+    else:
+        if (result[0] >= result[1]): chose_action = actions[0]
+        elif (result[1] >= result[0]): chose_action = actions[1]
+    return chose_action
+
+def NN_play():
+
+    print("Hello I'm NN AI ")
+    while(1):
+        size = int(input("Please input the size you want(must be int and must more than zero): "))
+        if size>0:
+            break
+    load_net = tr.load(path[size-1])
+    game = matrix_modified.game_class(size)  #size of the cards
+
+    while(1):
+        game.start_one_round()
+        game.show_game_condition_for_play()
+        can_drop=0
+        drop_action=0
+        os.system("pause")
+        print()
+        while(1):
+            test_item = game.cards.matrix.reshape((1, size * 52 * 5))
+            test_item = torch.tensor(torch.from_numpy(test_item)).float()
+            result = load_net(test_item)
+            action=judge_chose(result[0],can_drop)
+            if action=="drop":
+                can_drop=1
+            end, win = game.ai_input_action(action, drop_action)
+            if end==1:
+                break
+            os.system("pause")
+        game.end_one_round()
+        val = input("Do you want NN start one new around(0 is yes; 1 is no)")
+        if(val=="1"):break
+
+def __main__():
+    NN_play()
+
+if __name__ == "__main__":
+    __main__()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 import scipy
 import numpy
 import random
@@ -7,9 +99,6 @@ from scipy import special
 from scipy.special import expit, logit
 import matplotlib.pyplot as plt
 import algo_for_nn as algo
-
-
-# 神经网络类定义
 class NeuralNetwork():
     # 初始化神经网络
     def __init__(self, inputnodes, hiddennodes, outputnodes, learningrate):
@@ -163,8 +252,7 @@ def __main__():
 if __name__ == "__main__":
     __main__()
 
-
-
+'''
 
 
 

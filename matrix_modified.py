@@ -264,14 +264,16 @@ class game_class:
                 self.recalculate_player_list_and_sum(ind_drop)
                 self.show_game_condition_for_play()
 
+    # TODO
     def ai_input_action(self,action,drop_index):
         end = 0
         win = 0
+        if self.player_sum >= 19: action = "stay"
         if action == "stay":
             end =1
             win = self.judge_winner()
 
-            self.show_game_condition_for_play()
+            #self.show_game_condition_for_play()
             if (win == 0):
                 print("tie!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             if (win == 1):
@@ -280,14 +282,16 @@ class game_class:
                 print("dealer win!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         if action=="hit":
             self.player_auto()
-            self.show_game_condition_for_play()
+            #self.show_game_condition_for_play()
             if (self.player_sum > 21):
                 end=1
+                win=2
                 print("dealer win!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         if action=="drop":
             ind_drop = int(drop_index)
             self.recalculate_player_list_and_sum(ind_drop)
-            self.show_game_condition_for_play()
+            #self.show_game_condition_for_play()
+        #print(win)
         return end,win
 
 def __main__():
