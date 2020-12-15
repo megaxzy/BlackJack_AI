@@ -53,6 +53,13 @@ files:
     
     algorithm_efficency.py is to test for the algorithm efficency.
     
+     (5) NN part
+     
+     NN.py is for the AI player to play
+     
+     NN_implement_1 to 4 is the NN implement for each teammate
+     
+     NN_efficiency_1 to 4 is the NN test files
 
 cards:
 
